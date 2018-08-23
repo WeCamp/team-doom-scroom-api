@@ -28,3 +28,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Documentation
+    Scroom\Api\Controller\DocController:
+        tags: ['controller.service_arguments']
+        arguments:
+            $doc: '%kernel.project_dir%/specification.yaml'

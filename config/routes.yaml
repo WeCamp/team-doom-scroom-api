@@ -1,3 +1,9 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+room_create:
+    path: /room
+    controller: Scroom\Api\Controller\RoomController::post
+    methods: ['POST']
+
+doc:
+    path: /doc
+    controller: Scroom\Api\Controller\DocController::get
+    methods: ['GET']
