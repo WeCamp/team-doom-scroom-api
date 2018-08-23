@@ -3,3 +3,6 @@ Scroom\Api\Entity\Room:
     itemOperations:
         get: ~
         post: ~
+    attributes:
+        normalization_context:
+        groups: ['read']
