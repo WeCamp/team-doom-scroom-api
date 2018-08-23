@@ -1,0 +1,5 @@
+Scroom\Api\Entity\Room:
+    collectionOperations: []
+    itemOperations:
+        get: ~
+        post: ~
