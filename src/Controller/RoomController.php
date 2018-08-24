@@ -10,6 +10,7 @@ use Doctrine\DBAL\DBALException;
 use Scroom\Api\Repository\Exception\NonUniqueResultException;
 use Scroom\Api\Repository\RoomRepository;
 use Scroom\Api\Serializer\RoomSerializer;
+use Scroom\Loon;
 use Scroom\Room;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,6 +80,32 @@ final class RoomController
             }
 
             return new JsonResponse(RoomSerializer::serialize($room));
+        } catch (NonUniqueResultException|DBALException $e) {
+            return new JsonResponse(['error' => 'Unable to retrieve room.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return JsonResponse
+     */
+    public function enter(string $id): JsonResponse
+    {
+        try {
+            $room = $this->roomRepository->find($id);
+
+            if (!$room instanceof Room) {
+                throw new NotFoundHttpException('Room not found.');
+            }
+
+            $loon = Loon::enter($room);
+            $this->roomRepository->update($room);
+
+            return new JsonResponse([
+                'id' => $loon->id(),
+                'pickedCard' => $loon->pickedCard(),
+            ]);
         } catch (NonUniqueResultException|DBALException $e) {
             return new JsonResponse(['error' => 'Unable to retrieve room.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

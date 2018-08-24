@@ -10,6 +10,6 @@ room_poll:
     path: /room/{id}/poll
     controller: Scroom\Api\Controller\RoomController::poll
 
-loon_enter_room:
-    path: /loon/enter/{name}
-    controller: Scroom\Api\Controller\LoonController::enter
+room_enter:
+    path: /room/{id}/enter
+    controller: Scroom\Api\Controller\RoomController::enter
