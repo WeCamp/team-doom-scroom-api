@@ -161,7 +161,6 @@ final class RoomController
             );
 
         } catch (NonUniqueResultException|DBALException|InvalidArgumentException $e) {
-            dump($e);
             return new JsonResponse(['error' => 'Unable to pick card.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
