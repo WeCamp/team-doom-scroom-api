@@ -41,7 +41,7 @@ final class RoomSerializer
         foreach ($room->loons() as $loon) {
             $loons[] = [
                 'id' => $loon->id(),
-                'pickedCard' => $loon->pickedCard(),
+                'pickedCard' => $loon->pickedCard() !== null ? $loon->pickedCard()->toString() : null,
             ];
         }
 
