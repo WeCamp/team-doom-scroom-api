@@ -3,12 +3,12 @@
 #    controller: App\Controller\DefaultController::index
 
 room_open_up:
-    path: /room/{name}/open-up
+    path: /room/open-up
     controller: Scroom\Api\Controller\RoomController::openUp
 
-room_retrieve:
-    path: /room/{name}/retrieve
-    controller: Scroom\Api\Controller\RoomController::retrieve
+room_poll:
+    path: /room/{id}/poll
+    controller: Scroom\Api\Controller\RoomController::poll
 
 loon_enter_room:
     path: /loon/enter/{name}

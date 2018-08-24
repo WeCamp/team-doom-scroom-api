@@ -8,8 +8,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\ParameterType;
-use ReflectionClass;
 use Scroom\Api\Repository\Exception\NonUniqueResultException;
+use Scroom\Api\Repository\Exception\UnserializeException;
 use Scroom\Room;
 
 /**
@@ -52,22 +52,24 @@ final class RoomRepository
      */
     public function save(Room $room): void
     {
-        $sql = 'INSERT INTO room (id, name) VALUES (?, ?)';
-        $this->connection->executeUpdate($sql, [$room->id(), $room->name()], [ParameterType::STRING]);
+        $sql = 'INSERT INTO room (id, name, data) VALUES (?, ?, ?)';
+        $this->connection->executeUpdate(
+            $sql, [$room->id(), $room->name(), serialize($room)],
+            [ParameterType::STRING, ParameterType::STRING, ParameterType::STRING]
+        );
     }
 
     /**
-     * @param string $name
+     * @param string $id
      *
-     * @return Room|null
+     * @return null|Room
      * @throws NonUniqueResultException
      * @throws \Doctrine\DBAL\DBALException
-     * @throws \ReflectionException
      */
-    public function find(string $name): ?Room
+    public function find(string $id): ?Room
     {
-        $sql    = 'SELECT id, name FROM room WHERE name = ?';
-        $result = $this->connection->executeQuery($sql, [$name], [ParameterType::STRING]);
+        $sql    = 'SELECT id, name, data FROM room WHERE id = ?';
+        $result = $this->connection->executeQuery($sql, [$id], [ParameterType::STRING]);
 
         $rooms = $result->fetchAll();
 
@@ -79,7 +81,11 @@ final class RoomRepository
             return null;
         }
 
-        $room = $this->make($rooms[0]['id'], $rooms[0]['name']);
+        try {
+            $room = $this->make($rooms[0]['id'], $rooms[0]['name'], $rooms[0]['data']);
+        } catch (UnserializeException $e) {
+            return null;
+        }
 
         return $room;
     }
@@ -87,19 +93,18 @@ final class RoomRepository
     /**
      * @param string $id
      * @param string $name
+     * @param string $data
      *
      * @return Room
-     * @throws \ReflectionException
+     * @throws UnserializeException
      */
-    private function make(string $id, string $name): Room
+    private function make(string $id, string $name, string $data): Room
     {
-        $room = Room::openUp($name);
+        $room = unserialize($data);
 
-        $reflect = new ReflectionClass($room);
-        $idProp  = $reflect->getProperty('id');
-        $idProp->setAccessible(true);
-        $idProp->setValue($room, $id);
-        $idProp->setAccessible(false);
+        if (!$room instanceof Room || $room->id() !== $id || $room->name() !== $name) {
+            throw new UnserializeException('Could not unserialize Room object.');
+        }
 
         return $room;
     }
