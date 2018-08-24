@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Scroom\Api\Controller;
 
+use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Doctrine\DBAL\DBALException;
-use ReflectionException;
 use Scroom\Api\Repository\Exception\NonUniqueResultException;
 use Scroom\Api\Repository\RoomRepository;
+use Scroom\Api\Serializer\RoomSerializer;
 use Scroom\Room;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -34,42 +37,49 @@ final class RoomController
     }
 
     /**
-     * @param string $name
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function openUp(string $name): JsonResponse
+    public function openUp(Request $request): JsonResponse
     {
         try {
-            if ($this->roomRepository->exists($name) === true) {
+            Assertion::notEmpty($request->getContent());
+            Assertion::contains($request->getContent(), 'name');
+
+            $content = json_decode($request->getContent(), true);
+
+            if ($this->roomRepository->exists($content['name']) === true) {
                 return new JsonResponse(['message' => 'Room already exists'], Response::HTTP_BAD_REQUEST);
             }
 
-            $room = Room::openUp($name);
+            $room = Room::openUp($content['name']);
             $this->roomRepository->save($room);
 
-            return new JsonResponse(['id' => $room->id()], Response::HTTP_CREATED);
+            return new JsonResponse(RoomSerializer::serialize($room), Response::HTTP_CREATED);
+        } catch (AssertionFailedException $e) {
+            return new JsonResponse(['error' => 'Request content empty or invalid.'], Response::HTTP_BAD_REQUEST);
         } catch (DBALException $e) {
-            return new JsonResponse(['error' => 'Unable to retrieve room; name is not unique.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['error' => 'Unable to open room.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * @param string $name
+     * @param string  $id
      *
      * @return JsonResponse
      */
-    public function retrieve(string $name): JsonResponse
+    public function poll(string $id): JsonResponse
     {
         try {
-            $room = $this->roomRepository->find($name);
+            $room = $this->roomRepository->find($id);
 
             if (!$room instanceof Room) {
                 throw new NotFoundHttpException('Room not found.');
             }
 
-            return new JsonResponse(['id' => $room->id(), 'name' => $room->name()]);
-        } catch (NonUniqueResultException|DBALException|ReflectionException $e) {
+            return new JsonResponse(RoomSerializer::serialize($room));
+        } catch (NonUniqueResultException|DBALException $e) {
             return new JsonResponse(['error' => 'Unable to retrieve room.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

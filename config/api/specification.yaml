@@ -195,7 +195,9 @@ components:
                 id:
                     type: string
                 turns:
-                    $ref: '#/components/schemas/Turn'
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Turn'
                 hasEnded:
                     type: boolean
 

@@ -16,7 +16,7 @@ final class Version20180824074038 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('CREATE TABLE room (id CHAR(36) NOT NULL --(DC2Type:guid)
-        , name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        , name VARCHAR(255) NOT NULL, data LONGTEXT DEFAULT NULL, PRIMARY KEY(id))');
     }
 
     public function down(Schema $schema) : void
