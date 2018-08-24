@@ -4,7 +4,7 @@
 
 room_open_up:
     path: /room/open-up
-    controller: Scroom\Api\Controller\RoomController::openUp
+    controller: Scroom\Api\Controller\RoomController::open
 
 room_poll:
     path: /room/{id}/poll
@@ -13,3 +13,7 @@ room_poll:
 room_enter:
     path: /room/{id}/enter
     controller: Scroom\Api\Controller\RoomController::enter
+
+room_card:
+    path: /room/{id}/card
+    controller: Scroom\Api\Controller\RoomController::card
