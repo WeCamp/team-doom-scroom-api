@@ -1,6 +1,33 @@
-Scroom\Api\Entity\Room:
-    collectionOperations: ['post']
-    itemOperations: ~
+Scroom\Room:
+    collectionOperations:
+        post:
+            method: 'POST'
+            route_name: 'room_open_up'
+            swagger_context:
+                summary: Open up the room.
+                parameters:
+                - { name: 'name', in: path, required: true, type: string, description: 'The name of the room.'}
+                responses:
+                    200:
+                        description: the room
+                        content:
+                            application/json:
+                                schema:
+                                    id:
+                                        type: string
+                                    name:
+                                        type: string
+                    400:
+                        description: bad request
+
+    itemOperations:
+        get:
+            method: 'GET'
+            route_name: 'room_retrieve'
+            swagger_context:
+                summary: Retrieve a room by name.
+                parameters:
+                - { name: 'name', in: path, required: true, type: string, description: 'The name of the room.'}
     attributes:
         normalization_context:
         groups: ['read']
