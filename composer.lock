@@ -2814,7 +2814,7 @@
             "dist": {
                 "type": "path",
                 "url": "/Users/danielle/www/scroom",
-                "reference": "eb7fbfe1086bdaef2263ec558bf8ada5346c3f24",
+                "reference": "93acb9772b37839ec17d5a329e8e4676741f88f7",
                 "shasum": null
             },
             "require": {
@@ -2832,7 +2832,7 @@
             },
             "autoload-dev": {
                 "psr-4": {
-                    "Scroom\\Tests\\": "test/"
+                    "Scroom\\Tests\\": "tests/"
                 }
             },
             "license": [
