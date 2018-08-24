@@ -1,8 +1,6 @@
 Scroom\Api\Entity\Room:
-    collectionOperations: []
-    itemOperations:
-        get: ~
-        post: ~
+    collectionOperations: ['post']
+    itemOperations: ~
     attributes:
         normalization_context:
         groups: ['read']

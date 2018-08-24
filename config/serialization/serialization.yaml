@@ -1,0 +1,6 @@
+Scroom\Api\Entity\Room:
+    attributes:
+        id:
+            groups: ['read']
+        name:
+            groups: ['read']
