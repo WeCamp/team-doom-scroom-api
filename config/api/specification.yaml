@@ -1,0 +1,212 @@
+openapi: "3.0.0"
+info:
+    version: 0.1.0
+    title: The Scroom API specification
+    license:
+        name: MIT
+paths:
+    '/room/open-up':
+        post:
+            summary: Open up the room
+            operationId: openRoom
+            tags:
+            - room
+            requestBody:
+                description: the room name
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+            responses:
+                200:
+                    description: the room
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Room'
+                400:
+                    description: bad request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                500:
+                    description: internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    '/room/{id}/poll':
+        get:
+            summary: Poll a room
+            operationId: pollRoom
+            tags:
+            - room
+            parameters:
+            -   name: id
+                in: path
+                description: the id of the room
+                required: true
+                schema:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+            responses:
+                200:
+                    description: the room
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Room'
+                400:
+                    description: bad request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                500:
+                    description: internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    '/room/{id}/enter':
+        post:
+            summary: Loon enters the room
+            operationId: loonEntersRoom
+            tags:
+            - loon
+            parameters:
+            -   name: id
+                in: path
+                description: the room identifier
+                required: true
+                schema:
+                    type: string
+            responses:
+                200:
+                    description: the loon
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Loon'
+                400:
+                    description: bad request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                500:
+                    description: internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    '/room/{id}/card':
+        post:
+            summary: Loon picks a card
+            operationId: loonPicksACard
+            tags:
+            - loon
+            parameters:
+            -   name: id
+                in: path
+                description: the identifier of the room
+                required: true
+                schema:
+                    type: string
+            requestBody:
+                description: the loon identifier and card
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Loon'
+            responses:
+                200:
+                    description: the loon
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Loon'
+                400:
+                    description: bad request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                500:
+                    description: internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+components:
+    schemas:
+        Room:
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                loons:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Loon'
+                play:
+                    $ref: '#/components/schemas/Play'
+
+        Loon:
+            properties:
+                id:
+                    type: string
+                pickedCard:
+                    type: string
+
+        Play:
+            properties:
+                id:
+                    type: string
+                turns:
+                    $ref: '#/components/schemas/Turn'
+                hasEnded:
+                    type: boolean
+
+        Turn:
+            properties:
+                id:
+                    type: string
+                hasEnded:
+                    type: boolean
+
+        Error:
+            properties:
+                message:
+                    type: string

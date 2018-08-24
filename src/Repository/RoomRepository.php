@@ -59,12 +59,12 @@ final class RoomRepository
     /**
      * @param string $name
      *
-     * @return Room
+     * @return Room|null
      * @throws NonUniqueResultException
      * @throws \Doctrine\DBAL\DBALException
      * @throws \ReflectionException
      */
-    public function find(string $name): Room
+    public function find(string $name): ?Room
     {
         $sql    = 'SELECT id, name FROM room WHERE name = ?';
         $result = $this->connection->executeQuery($sql, [$name], [ParameterType::STRING]);
@@ -73,6 +73,10 @@ final class RoomRepository
 
         if (count($rooms) > 1) {
             throw new NonUniqueResultException('Found more than one room with that name.');
+        }
+
+        if (count($rooms) === 0) {
+            return null;
         }
 
         $room = $this->make($rooms[0]['id'], $rooms[0]['name']);
