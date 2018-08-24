@@ -9,16 +9,26 @@ Scroom\Room:
                 - { name: 'name', in: path, required: true, type: string, description: 'The name of the room.'}
                 responses:
                     200:
-                        description: the room
+                        description: the room id
                         content:
                             application/json:
                                 schema:
                                     id:
                                         type: string
-                                    name:
-                                        type: string
                     400:
                         description: bad request
+                        content:
+                            application/json:
+                                schema:
+                                    message:
+                                        type: string
+                    500:
+                        description: internal server error
+                        content:
+                            application/json:
+                                schema:
+                                    message:
+                                        type: string
 
     itemOperations:
         get:
@@ -28,6 +38,30 @@ Scroom\Room:
                 summary: Retrieve a room by name.
                 parameters:
                 - { name: 'name', in: path, required: true, type: string, description: 'The name of the room.'}
+                responses:
+                    200:
+                        description: the room
+                        content:
+                            application/json:
+                                schema:
+                                    id:
+                                        type: string
+                                    name:
+                                        type: string
+                    404:
+                        description: room not found
+                        content:
+                            application/json:
+                                schema:
+                                    message:
+                                        type: string
+                    500:
+                        description: internal server error
+                        content:
+                            application/json:
+                                schema:
+                                    message:
+                                        type: string
     attributes:
         normalization_context:
         groups: ['read']

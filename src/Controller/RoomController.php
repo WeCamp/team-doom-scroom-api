@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Scroom\Api\Controller;
 
+use Doctrine\DBAL\DBALException;
+use ReflectionException;
 use Scroom\Api\Repository\Exception\NonUniqueResultException;
 use Scroom\Api\Repository\RoomRepository;
 use Scroom\Room;
@@ -35,26 +37,27 @@ final class RoomController
      * @param string $name
      *
      * @return JsonResponse
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function openUp(string $name): JsonResponse
     {
-        if ($this->roomRepository->exists($name) === true) {
-            return new JsonResponse(['message' => 'Room already exists'], Response::HTTP_BAD_REQUEST);
+        try {
+            if ($this->roomRepository->exists($name) === true) {
+                return new JsonResponse(['message' => 'Room already exists'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $room = Room::openUp($name);
+            $this->roomRepository->save($room);
+
+            return new JsonResponse(['id' => $room->id()], Response::HTTP_CREATED);
+        } catch (DBALException $e) {
+            return new JsonResponse(['error' => 'Unable to retrieve room; name is not unique.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $room = Room::openUp($name);
-        $this->roomRepository->save($room);
-
-        return new JsonResponse(['id' => $room->id()], Response::HTTP_CREATED);
     }
 
     /**
      * @param string $name
      *
      * @return JsonResponse
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \ReflectionException
      */
     public function retrieve(string $name): JsonResponse
     {
@@ -66,8 +69,8 @@ final class RoomController
             }
 
             return new JsonResponse(['id' => $room->id(), 'name' => $room->name()]);
-        } catch (NonUniqueResultException $e) {
-            return new JsonResponse(['error' => 'Unable to retrieve room; name is not unique.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (NonUniqueResultException|DBALException|ReflectionException $e) {
+            return new JsonResponse(['error' => 'Unable to retrieve room.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
