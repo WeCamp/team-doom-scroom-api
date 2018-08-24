@@ -5,19 +5,22 @@ info:
     license:
         name: MIT
 paths:
-    '/room/{name}/open-up/':
+    '/room/open-up':
         post:
             summary: Open up the room
             operationId: openRoom
             tags:
             - room
-            parameters:
-            -   name: name
-                in: path
-                description: the name of the room
+            requestBody:
+                description: the room name
                 required: true
-                schema:
-                    type: string
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
             responses:
                 200:
                     description: the room
@@ -38,176 +41,22 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Error'
 
-    '/room/{name}/retrieve':
+    '/room/{id}/poll':
         get:
-            summary: Retrieve a room
-            operationId: retrieveRoom
+            summary: Poll a room
+            operationId: pollRoom
             tags:
             - room
             parameters:
-            -   name: name
-                in: path
-                description: the name of the room
-                required: true
-                schema:
-                    type: string
-            responses:
-                200:
-                    description: the room
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Room'
-                400:
-                    description: bad request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                404:
-                    description: not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                500:
-                    description: internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-
-    '/room/{name}/play/start':
-        post:
-            summary: Start a play in the room
-            operationId: roomStartPlay
-            tags:
-            - play
-            parameters:
-            -   name: name
-                in: path
-                description: the name of the room to start a play in
-                required: true
-                schema:
-                    type: string
-            responses:
-                200:
-                    description: the room
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Room'
-                400:
-                    description: bad request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                404:
-                    description: not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                500:
-                    description: internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-
-
-    '/room/{name}/play/end':
-        post:
-            summary: End the play in the room
-            operationId: roomEndPlay
-            tags:
-            - play
-            parameters:
-            -   name: name
-                in: path
-                description: the name of the room to end a play in
-                required: true
-                schema:
-                    type: string
-            responses:
-                200:
-                    description: the room
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Room'
-                400:
-                    description: bad request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                404:
-                    description: not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                500:
-                    description: internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-
-    '/room/{name}/compare':
-        post:
-            summary: Compare the cards in play
-            operationId: roomCompare
-            tags:
-            - compare
-            parameters:
-            -   name: name
-                in: path
-                description: the name of the room to compare the cards in
-                required: true
-                schema:
-                    type: string
-            responses:
-                200:
-                    description: the room
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Room'
-                400:
-                    description: bad request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                404:
-                    description: not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                500:
-                    description: internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-
-    '/play/{id}/turn/start':
-        post:
-            summary: Start the turn in the play
-            operationId: playStartTurn
-            tags:
-            - play
-            parameters:
             -   name: id
                 in: path
-                description: the id of the play to start a turn in
+                description: the id of the room
                 required: true
                 schema:
-                    type: string
+                    type: object
+                    properties:
+                        id:
+                            type: string
             responses:
                 200:
                     description: the room
@@ -234,55 +83,16 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Error'
 
-    '/play/{id}/turn/end':
-        post:
-            summary: End the turn in the play
-            operationId: playEndTurn
-            tags:
-            - play
-            parameters:
-            -   name: id
-                in: path
-                description: the id of the play to end a turn in
-                required: true
-                schema:
-                    type: string
-            responses:
-                200:
-                    description: the room
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Room'
-                400:
-                    description: bad request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                404:
-                    description: not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-                500:
-                    description: internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
-
-    '/loon/enter/{name}':
+    '/room/{id}/enter':
         post:
             summary: Loon enters the room
             operationId: loonEntersRoom
             tags:
             - loon
             parameters:
-            -   name: name
+            -   name: id
                 in: path
-                description: the name of the room to enter
+                description: the room identifier
                 required: true
                 schema:
                     type: string
@@ -312,19 +122,26 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Error'
 
-    '/loon/card/{card}':
+    '/room/{id}/card':
         post:
             summary: Loon picks a card
             operationId: loonPicksACard
             tags:
             - loon
             parameters:
-            -   name: card
+            -   name: id
                 in: path
-                description: the card value
+                description: the identifier of the room
                 required: true
                 schema:
                     type: string
+            requestBody:
+                description: the loon identifier and card
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Loon'
             responses:
                 200:
                     description: the loon
