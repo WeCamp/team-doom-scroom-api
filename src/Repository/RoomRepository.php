@@ -60,6 +60,20 @@ final class RoomRepository
     }
 
     /**
+     * @param Room $room
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function update(Room $room): void
+    {
+        $sql = 'UPDATE room SET data = ? where id = ?';
+        $this->connection->executeUpdate(
+            $sql, [serialize($room), $room->id()],
+            [ParameterType::STRING, ParameterType::STRING]
+        );
+    }
+
+    /**
      * @param string $id
      *
      * @return null|Room

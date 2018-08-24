@@ -64,12 +64,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Room'
-                400:
-                    description: bad request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Error'
                 404:
                     description: not found
                     content:
