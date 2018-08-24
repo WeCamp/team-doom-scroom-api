@@ -1,6 +1,8 @@
-# Team Doom - Reinventing Scroom
+# Scroom API
 
-## The API
+## Setup
 
-All documentation is in the [wiki](https://gitlab.weca.mp:6443/team-damian/scroom/wikis/home).
+View the setup instructions in the [wiki](https://gitlab.weca.mp:6443/team-damian/scroom-api/wikis/).
+
+
 

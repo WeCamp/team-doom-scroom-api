@@ -13,11 +13,13 @@
         "symfony/console": "*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "*",
-        "symfony/yaml": "*"
+        "symfony/yaml": "*",
+        "team-damian/scroom": "dev-master"
     },
     "require-dev": {
         "symfony/dotenv": "*",
         "symfony/test-pack": "^1.0",
+        "symfony/var-dumper": "*",
         "symfony/web-server-bundle": "*"
     },
     "config": {
@@ -54,6 +56,12 @@
         "post-update-cmd": [
             "@auto-scripts"
         ]
+    },
+    "repositories": {
+        "scroom": {
+            "type": "path",
+            "url": "/Users/danielle/www/scroom/"
+        }
     },
     "conflict": {
         "symfony/symfony": "*"
