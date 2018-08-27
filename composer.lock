@@ -2871,7 +2871,7 @@
             "version": "dev-master",
             "dist": {
                 "type": "path",
-                "url": "/Users/danielle/www/scroom",
+                "url": "/home/jasper/Development/projects/team-damian-scroom",
                 "reference": "93acb9772b37839ec17d5a329e8e4676741f88f7",
                 "shasum": null
             },

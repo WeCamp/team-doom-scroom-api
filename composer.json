@@ -58,12 +58,19 @@
             "@auto-scripts"
         ]
     },
-    "repositories": {
-        "scroom": {
+    "repositories": [
+        {
             "type": "path",
-            "url": "/Users/danielle/www/scroom/"
+            "url": "/home/jasper/Development/projects/team-damian-scroom"
+        },
+	{
+            "type": "composer",
+            "url": "https://packagist-repo.weca.mp/wecamp/"
+        },
+        {
+            "packagist.org": false
         }
-    },
+    ],
     "conflict": {
         "symfony/symfony": "*"
     },
